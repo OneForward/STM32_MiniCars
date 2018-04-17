@@ -68,8 +68,8 @@ int errL_over_cnt, errR_over_cnt;             // errÆ«×ó¡¢Æ«ÓÒ¼ÆÊýÆ÷
     // Ã»ÓÐÆ«Ïò
     if (DIRECTION == MID) 
     {
-      if (errL_over_cnt) setTargetMotors(800, 800, 400, 400);
-      else if (errR_over_cnt) setTargetMotors(400, 400, 800, 800);
+      if (errL_over_cnt) setTargetMotors(400, 400, 800, 800);
+      else if (errR_over_cnt) setTargetMotors(800, 800, 400, 400);
       else setTargetMotors(800, 800, 800, 800);
 			errL_over_cnt=0;
 			errR_over_cnt=0;
@@ -108,17 +108,18 @@ int errL_over_cnt, errR_over_cnt;             // errÆ«×ó¡¢Æ«ÓÒ¼ÆÊýÆ÷
 //    if (STATE==WHITE && countStates(10, RIGHT)>5) STATE=RIGHT;
     
     // ÍêÈ«Æ«Àë
-    if (errL_over_cnt>1 && STATE==WHITE)
+    if (errL_over_cnt>=1 && STATE==WHITE)
     {
-      setTargetMotors(800, 800, -300, -300);
+      setTargetMotors(800, 800, -400, -400);
     } 
     
-    else if (errR_over_cnt>1 && STATE==WHITE)
+    else if (errR_over_cnt>=1 && STATE==WHITE)
     {
-      setTargetMotors(-300, -300, 800, 800);
+      setTargetMotors(-400, -400, 800, 800);
     } 
-    if (errL_over_cnt>13) setTargetMotors(300, 300, -300, -300);
-    if (errR_over_cnt>13) setTargetMotors(-300, -300, 300, 300);
+    // ¼±ÍäÅÐ¶Ï
+    if (errL_over_cnt>6) setTargetMotors(400, 400, -400, -400);
+    if (errR_over_cnt>6) setTargetMotors(-400, -400, 400, 400);
     
     delay_flag=1;	
     delay_50=0;
@@ -136,7 +137,7 @@ int main(void)
 		
     LxGetVal();
     showADCData();
-    //trackLineControl();
+    trackLineControl();
     
 	}
 }

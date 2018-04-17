@@ -78,7 +78,7 @@ void updateState() {
       STATE=ROTATE_RIGHT;
     }
     
-    else if (dist1 <= 5 && dist2 <= 6)  
+    else if (dist1 <= 4 ||  (dist1 < 6 && dist2 <= 6)  )
       STATE=BACK;
       
     else 

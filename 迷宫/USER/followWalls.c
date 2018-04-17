@@ -91,7 +91,7 @@ void goStraight() {
     Kp2=35;
     Kd2=10;
      
-    DIST_SET = 11;
+    DIST_SET = 9;
     
     err = dist1 - DIST_SET;
     err_diff = err - err_prev;
