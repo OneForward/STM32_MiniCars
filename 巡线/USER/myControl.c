@@ -231,14 +231,9 @@ void showADCData() {
   OLED_ShowNumber(80, 3*12, Motor_D, 5, 12);
 
   // 显示巡线传感器读数
-//  testRxData = L1;OLED_ShowNumber(0, 0, testRxData, 5, 12);
-//  testRxData = L2;OLED_ShowNumber(0, 1*12, testRxData, 5, 12);
-//  testRxData = L3;OLED_ShowNumber(0, 2*12, testRxData, 5, 12);
-
-  // 显示红外传感器读数
-  testRxData = (int)dist1;OLED_ShowNumber(40, 0, testRxData, 5, 16);
-  testRxData = (int)dist2;OLED_ShowNumber(40, 20, testRxData, 5, 16);
-  testRxData = (int)dist3;OLED_ShowNumber(40, 40, testRxData, 5, 16);
+  testRxData = L1;OLED_ShowNumber(0, 0, testRxData, 5, 12);
+  testRxData = L2;OLED_ShowNumber(0, 1*12, testRxData, 5, 12);
+  testRxData = L3;OLED_ShowNumber(0, 2*12, testRxData, 5, 12);
   
 //  for (t=0; t<16; ++t) { // 辅助判断PA0-15引脚的ADC数据是否正常
 //    testRxData = Get_Adc(t);OLED_ShowNumber((t/4)*30, (t%4)*12, testRxData, 5, 12);

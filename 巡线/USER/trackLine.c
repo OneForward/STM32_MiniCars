@@ -68,11 +68,12 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
     // 没有偏向
     if (DIRECTION == MID) 
     {
+      if (errL_over_cnt) setTargetMotors(800, 800, 400, 400);
+      else if (errR_over_cnt) setTargetMotors(400, 400, 800, 800);
+      else setTargetMotors(800, 800, 800, 800);
 			errL_over_cnt=0;
 			errR_over_cnt=0;
       du_left = du_right = 0;
-//      setTargetMotors(500, 500, 500, 500);
-      setTargetMotors(800+du_left, 800+du_left, 800+du_right, 800+du_right);
     }
     
     // 偏右
@@ -118,6 +119,7 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
     } 
     if (errL_over_cnt>13) setTargetMotors(300, 300, -300, -300);
     if (errR_over_cnt>13) setTargetMotors(-300, -300, 300, 300);
+    
     delay_flag=1;	
     delay_50=0;
     while(delay_flag);	       //通过MPU6050的INT中断实现的50ms精准延时	
@@ -134,7 +136,7 @@ int main(void)
 		
     LxGetVal();
     showADCData();
-    trackLineControl();
+    //trackLineControl();
     
 	}
 }

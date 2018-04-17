@@ -8,10 +8,10 @@
 void  Adc_Init(void)
 {    
   //先初始化IO口
- 	RCC->APB2ENR|=1<<2;    //使能PORTA口时钟 
-  //RCC->APB2ENR|=1<<4;    //使能PORTC口时钟 
+ 	RCC->APB2ENR|=1<<2;    //使能PORTA口时钟
 	GPIOA->CRL&=0;//PA76543210 anolog输入 	
-  GPIOA->CRH&=0;//PA76543210 anolog输入
+  GPIOA->CRH&=0;//PA76543210 anolog输入  
+//  RCC->APB2ENR|=1<<4;    //使能PORTC口时钟 
 //  GPIOC->CRL&=0;//PC76543210 anolog输入
 //  GPIOC->CRH&=0;//PC76543210 anolog输入
 	
