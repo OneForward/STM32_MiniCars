@@ -72,8 +72,8 @@ void updateState() {
     }
     
     else if ((dist1 <= 17 && dist2 <= 20) || 
-              dist1 <= 8 || 
-            (dist1 <= 11 && dist3 >= 13 && dist3 <= 36)) 
+              dist1 <= 8  || 
+             (dist1 <= 11 && dist3 >= 13 && dist3 <= 36)) 
     {
       STATE=ROTATE_RIGHT;
     }
@@ -84,11 +84,11 @@ void updateState() {
     else 
       STATE=STRAIGHT;
     
-    if (STATE==LEFT_TMP && isPrevState(LEFT_TMP) &&
+    if (isPrevState(LEFT_TMP) &&
         isPrevState(ROTATE_RIGHT) != 1) STATE=ROTATE_LEFT;
     
-    if (STATE==ROTATE_RIGHT && isPrevState(ROTATE_RIGHT) && dist1 > 8 && dist1 < 20 && 
-        dist2 >= 14 && dist2 <= 35 && dist3 < 16) STATE=STRAIGHT;
+    if (isPrevState(ROTATE_RIGHT) && dist1 > 8 && dist1 < 20 && 
+        dist2 >= 14 && dist2 <= 35 && dist3 < 16) STATE=ROTATE_LEFT;
 }
 
 /**************************************************************************
@@ -111,7 +111,7 @@ int countStates(int recent, int state) {
   int cnt=0;
   int pt=head_pt;
   for (t=0; t<recent; ++t) {
-    pt+=20; pt--; pt %= 20;
+    pt = (pt + 19) % 20;
     if (STATE_ARR[pt] == state)
       cnt++;
   }

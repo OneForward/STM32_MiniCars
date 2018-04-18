@@ -39,7 +39,7 @@ int err=0, err_diff=0, err_sum=0, err_prev=0; // err相关变量
 float Kp1, Ki1, Kd1, Kp2, Ki2, Kd2;           // PID 相关变量
 int du, du_left, du_right;                    // du操纵变量以及相关变量
 int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
-
+int white_cnt=0;
 /**************************************************************************
 函数功能： 巡线PID控制算法核心
 **************************************************************************/
@@ -47,17 +47,17 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
 {
 
     // 设置PID参数
-    Kp1=5;
+    Kp1=30;
     Kd1=30;
 
     // L2的setpoint值，与当时环境光线强度有关
     L2_SET = 2000; 
   
     // 判断偏离状态
-    if (L1 < 1500 && L3 > L1) DIRECTION = RIGHT;
-    else if (L3 < 1500 && L1 > L3) DIRECTION = LEFT;
-    else if (L2 < L2_SET) DIRECTION = MID;
-    else if (L1 > 1600 && L2 > 1800 && L3 > 1800) DIRECTION = WHITE;
+    if (L1 < 1500 && L3 > L1) DIRECTION = RIGHT,white_cnt=0;
+    else if (L3 < 1500 && L1 > L3) DIRECTION = LEFT,white_cnt=0;
+    else if (L2 < L2_SET) DIRECTION = MID,white_cnt=0;
+    else if (L1 > 1600 && L2 > 1800 && L3 > 1800) DIRECTION = WHITE,white_cnt++;
     
     // 计算偏差err，PID计算操纵变量du
     err = L2 - L2_SET;
@@ -68,9 +68,9 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
     // 没有偏向
     if (DIRECTION == MID) 
     {
-      if (errL_over_cnt) setTargetMotors(400, 400, 800, 800);
-      else if (errR_over_cnt) setTargetMotors(800, 800, 400, 400);
-      else setTargetMotors(800, 800, 800, 800);
+      if (errL_over_cnt) setTargetMotors(400, 400, 1000, 1000);
+      else if (errR_over_cnt) setTargetMotors(1000, 1000, 400, 400);
+      else setTargetMotors(1000, 1000, 1000, 1000);
 			errL_over_cnt=0;
 			errR_over_cnt=0;
       du_left = du_right = 0;
@@ -85,7 +85,7 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
       du_right = du;
 //      setTargetMotors(500-200*errR_over_cnt, 500-200*errR_over_cnt, 
 //                      500+20*errR_over_cnt, 500+20*errR_over_cnt);
-      setTargetMotors(800+du_left, 800+du_left, 800+du_right, 800+du_right);
+      setTargetMotors(1000+du_left, 1000+du_left, 1000+du_right, 1000+du_right);
     }
     
     // 偏左
@@ -97,7 +97,7 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
       du_right = -du;
 //      setTargetMotors(800+20*errR_over_cnt, 500+20*errR_over_cnt,
 //                      500-200*errR_over_cnt, 500-200*errR_over_cnt);
-      setTargetMotors(800+du_left, 800+du_left, 800+du_right, 800+du_right);
+      setTargetMotors(1000+du_left, 1000+du_left, 1000+du_right,1000+du_right);
     }
     
     
@@ -108,18 +108,23 @@ int errL_over_cnt, errR_over_cnt;             // err偏左、偏右计数器
 //    if (STATE==WHITE && countStates(10, RIGHT)>5) STATE=RIGHT;
     
     // 完全偏离
-    if (errL_over_cnt>=1 && STATE==WHITE)
+    if (errL_over_cnt>=12 && STATE==WHITE)
     {
-      setTargetMotors(800, 800, -400, -400);
+      setTargetMotors(1000, 1000, -50, -50);
     } 
     
-    else if (errR_over_cnt>=1 && STATE==WHITE)
+    else if (errR_over_cnt>=12 && STATE==WHITE)
     {
-      setTargetMotors(-400, -400, 800, 800);
+      setTargetMotors(-50, -50, 1000, 1000);
     } 
+    else 
+    if (STATE==WHITE && white_cnt>55) {
+      if (countStates(8, LEFT) > countStates(8, RIGHT)) setTargetMotors(600, 600, -600, -600);
+      else setTargetMotors(-600, -600, 600, 600);
+    }
     // 急弯判断
-    if (errL_over_cnt>6) setTargetMotors(400, 400, -400, -400);
-    if (errR_over_cnt>6) setTargetMotors(-400, -400, 400, 400);
+    if (errL_over_cnt>60) setTargetMotors(600, 600, -600, -600);
+    if (errR_over_cnt>60) setTargetMotors(-400, -400, 400, 400);
     
     delay_flag=1;	
     delay_50=0;

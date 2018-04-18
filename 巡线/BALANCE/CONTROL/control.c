@@ -54,7 +54,7 @@ int EXTI15_10_IRQHandler(void)
 		if(delay_flag==1)
 		{
 			// CHANGED
-			if(++delay_50==10)	 delay_50=0,delay_flag=0;                     //给主函数提供50ms的精准延时
+			if(++delay_50==1)	 delay_50=0,delay_flag=0;                     //给主函数提供50ms的精准延时
 		}
 		if(Flag_Target==1)                                                  //5ms读取一次陀螺仪和加速度计的值
 		{
