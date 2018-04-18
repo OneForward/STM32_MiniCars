@@ -66,29 +66,29 @@ void IRGetVal() {
 **************************************************************************/
 void updateState() {
     
-    if (dist1 >= 40)  
+    if (dist1 >= 30)  
     {
       STATE=LEFT_TMP;
     }
     
     else if ((dist1 <= 17 && dist2 <= 20) || 
-              dist1 <= 8  || 
-             (dist1 <= 11 && dist3 >= 13 && dist3 <= 36)) 
+              dist1 <= 8 || 
+            (dist1 <= 11 && dist3 >= 13 && dist3 <= 36)) 
     {
       STATE=ROTATE_RIGHT;
     }
     
-    else if (dist1 <= 4 ||  (dist1 < 6 && dist2 <= 6)  )
+    else if (dist1 <= 5 && dist2 <= 6)  
       STATE=BACK;
       
     else 
       STATE=STRAIGHT;
     
-    if (isPrevState(LEFT_TMP) &&
+    if (STATE==LEFT_TMP && isPrevState(LEFT_TMP) &&
         isPrevState(ROTATE_RIGHT) != 1) STATE=ROTATE_LEFT;
     
-    if (isPrevState(ROTATE_RIGHT) && dist1 > 8 && dist1 < 20 && 
-        dist2 >= 14 && dist2 <= 35 && dist3 < 16) STATE=ROTATE_LEFT;
+    if (STATE==ROTATE_RIGHT && isPrevState(ROTATE_RIGHT) && dist1 > 8 && dist1 < 20 && 
+        dist2 >= 14 && dist2 <= 35 && dist3 < 16) STATE=STRAIGHT;
 }
 
 /**************************************************************************
@@ -111,7 +111,7 @@ int countStates(int recent, int state) {
   int cnt=0;
   int pt=head_pt;
   for (t=0; t<recent; ++t) {
-    pt = (pt + 19) % 20;
+    pt+=20; pt--; pt %= 20;
     if (STATE_ARR[pt] == state)
       cnt++;
   }
@@ -210,9 +210,9 @@ void rotateLeft() {
       }
       cnt++;
 
-      delay_flag=1;	
+      delay_flag=1; 
       delay_50=0;
-      while(delay_flag);	       //通过MPU6050的INT中断实现的50ms精准延时	
+      while(delay_flag);         //通过MPU6050的INT中断实现的50ms精准延时 
   }
 }
 
@@ -257,27 +257,27 @@ void showADCData() {
 void initiateCars() {
   
     Stm32_Clock_Init(9);            //=====系统时钟设置
-  	delay_init(72);                 //=====延时初始化
-  	JTAG_Set(JTAG_SWD_DISABLE);     //=====关闭JTAG接口
-  	JTAG_Set(SWD_ENABLE);           //=====打开SWD接口 可以利用主板的SWD接口调试
-  	LED_Init();                     //=====初始化与 LED 连接的硬件接口
-  	KEY_Init();                     //=====按键初始化
-  	if(MODE==0)Run_Flag=1;          //=====启动的过程中，根据模式选择开关确定进入位置模式还是速度模式
-  	else Run_Flag=0;                //=====启动的过程中，根据模式选择开关确定进入位置模式还是速度模式
-  	OLED_Init();                    //=====OLED初始化
-  	uart_init(72,128000);           //=====串口1初始化
-  	uart2_init(36,9600);            //=====串口2初始化
-  	uart3_init(36,115200);          //=====串口3初始化 
-  	Adc_Init();                     //=====adc初始化
-  	IIC_Init();                     //=====IIC初始化
-  	MPU6050_initialize();           //=====MPU6050初始化	
-  	DMP_Init();                     //=====初始化DMP     
-  	if(KEY==0) Flash_Read();        //=====读取Flash里面的参数
-  	delay_ms(1000);                 //=====延时等待初始化稳定
-  	EXTI_Init();                    //=====MPU6050 5ms定时中断初始化
-  	CAN1_Mode_Init(1,2,3,6,0);      //=====CAN初始化
-  	MiniBalance_PWM_Init(7199,14);  //=====初始化PWM 用于驱动电机
-  	delay_ms(1000);
+    delay_init(72);                 //=====延时初始化
+    JTAG_Set(JTAG_SWD_DISABLE);     //=====关闭JTAG接口
+    JTAG_Set(SWD_ENABLE);           //=====打开SWD接口 可以利用主板的SWD接口调试
+    LED_Init();                     //=====初始化与 LED 连接的硬件接口
+    KEY_Init();                     //=====按键初始化
+    if(MODE==0)Run_Flag=1;          //=====启动的过程中，根据模式选择开关确定进入位置模式还是速度模式
+    else Run_Flag=0;                //=====启动的过程中，根据模式选择开关确定进入位置模式还是速度模式
+    OLED_Init();                    //=====OLED初始化
+    uart_init(72,128000);           //=====串口1初始化
+    uart2_init(36,9600);            //=====串口2初始化
+    uart3_init(36,115200);          //=====串口3初始化 
+    Adc_Init();                     //=====adc初始化
+    IIC_Init();                     //=====IIC初始化
+    MPU6050_initialize();           //=====MPU6050初始化 
+    DMP_Init();                     //=====初始化DMP     
+    if(KEY==0) Flash_Read();        //=====读取Flash里面的参数
+    delay_ms(1000);                 //=====延时等待初始化稳定
+    EXTI_Init();                    //=====MPU6050 5ms定时中断初始化
+    CAN1_Mode_Init(1,2,3,6,0);      //=====CAN初始化
+    MiniBalance_PWM_Init(7199,14);  //=====初始化PWM 用于驱动电机
+    delay_ms(1000);
     
     /********************变量初始化*********************/
     Run_Flag=0;Flag_Left=0;Flag_Right=0;Flag_Direction=0;
