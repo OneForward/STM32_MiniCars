@@ -71,24 +71,25 @@ void updateState() {
       STATE=LEFT_TMP;
     }
     
-    else if ((dist1 <= 17 && dist2 <= 20) || 
-              dist1 <= 8 || 
-            (dist1 <= 11 && dist3 >= 13 && dist3 <= 36)) 
+    else if ((dist1 <= 12.5 && dist2 <= 12.5) || 
+              (dist1 <= 11)|| 
+            (dist1 <= 9 && dist3 >= 13 && dist3 <= 36)) 
     {
       STATE=ROTATE_RIGHT;
     }
     
-    else if (dist1 <= 5 && dist2 <= 6)  
+    else if (dist1 <= 11 && dist2 <= 8)  
       STATE=BACK;
       
     else 
       STATE=STRAIGHT;
     
     if (STATE==LEFT_TMP && isPrevState(LEFT_TMP) &&
-        isPrevState(ROTATE_RIGHT) != 1) STATE=ROTATE_LEFT;
+        countStates(20, ROTATE_RIGHT) < 10) STATE=ROTATE_LEFT;
     
     if (STATE==ROTATE_RIGHT && isPrevState(ROTATE_RIGHT) && dist1 > 8 && dist1 < 20 && 
         dist2 >= 14 && dist2 <= 35 && dist3 < 16) STATE=STRAIGHT;
+    if (STATE==ROTATE_RIGHT && countStates(20, ROTATE_RIGHT)>3 && dist1>dist3+4 && dist1>11) STATE=STRAIGHT;
 }
 
 /**************************************************************************
@@ -179,9 +180,10 @@ void rotateRight() {
 void rotateLeft() {
   
   u32 cnt=0;
-  float T1 = 0.3, T2 = T1 + 0.5, 
-        T3 = T2 + 0.7, T4 = T3 + 0.45,
-        T5 = T4 + 0.5; 
+  //T1=0.1?//
+  float T1 = 0.3, T2 = T1 + 0.5*0.9, 
+        T3 = T2 + 0.7*0.8, T4 = T3 + 0.45,
+        T5 = T4 + 0.95; 
   while(cnt < 20*T5){
       
       IRGetVal();
